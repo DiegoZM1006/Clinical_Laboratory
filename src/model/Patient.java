@@ -3,13 +3,15 @@ package model;
 public class Patient {
 
     private String name;
-    private String age;
+    private String lastName;
+    private int age;
     private String gender;
     private String id;
     private boolean priority;
 
-    public Patient(String name, String age, String gender, String id, boolean priority) {
+    public Patient(String name, String lastName, int age, String gender, String id, boolean priority) {
         this.name = name;
+        this.lastName = lastName;
         this.age = age;
         this.gender = gender;
         this.id = id;
@@ -32,11 +34,11 @@ public class Patient {
         this.name = name;
     }
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
