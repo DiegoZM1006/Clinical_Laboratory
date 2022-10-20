@@ -16,7 +16,13 @@ public class Patient {
         this.priority = priority;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     public String getName() {
         return name;
@@ -62,6 +68,7 @@ public class Patient {
     public String toString() {
         return "Patient{" +
                 "name='" + name + '\'' +
+                "lastName='" + lastName + '\'' +
                 ", age='" + age + '\'' +
                 ", gender='" + gender + '\'' +
                 ", id='" + id + '\'' +
