@@ -1,4 +1,5 @@
 package ui;
+
 import com.google.gson.Gson;
 import model.*;
 import model.PriorityQueue;
@@ -26,7 +27,7 @@ public class Main {
     public Main() {
         sc = new Scanner(System.in);
     }
-    
+
     public static void main(String[] args) {
         System.out.println("STARTING APLICATION");
 
@@ -37,7 +38,7 @@ public class Main {
         do {
             option = myMain.showMenu();
             myMain.executeOperation(option);
-        } while(option != 0);
+        } while (option != 0);
 
         System.out.println("FINISHED THE APLICATION");
 
@@ -52,7 +53,8 @@ public class Main {
                         |     MENU CLINICAL LABORATORY      |
                         | (1) Add Patient                   |
                         | (2) Search Patient                |
-                        | (3)                               |
+                        | (3) Undo                          |
+                        | (4) Attend Patient                |
                         *-----------------------------------*
                         Choose option:\s"""
         );
@@ -65,13 +67,15 @@ public class Main {
         switch (i) {
             case 1 -> addPatient();
             case 2 -> searchPatient();
+            case 3 -> undo();
+            case 4 -> attendPatient();
             case 5 -> option = 0;
             default -> System.out.println("Error, invalid option");
         }
     }
 
 
-    public void addPatient(){
+    public void addPatient() {
         System.out.println("REGISTER PATIENT");
 
         String name, lastName, id, gender, contDecision;
@@ -81,23 +85,23 @@ public class Main {
 
         Patient validationPatient = hashTableDB.search(id);
 
-        if(validationPatient == null) {
+        if (validationPatient == null) {
             name = JOptionPane.showInputDialog("Enter your name");
             lastName = JOptionPane.showInputDialog("Enter your last name");
             gender = JOptionPane.showInputDialog("Enter your gender (M for male and F female)");
             age = Integer.parseInt(JOptionPane.showInputDialog("Enter your age"));
             if (age > 60) priority++;
             contDecision = JOptionPane.showInputDialog("You have any disease?");
-            if(contDecision.equalsIgnoreCase("Yes")) priority++;
-            if(gender.equals("F")) contDecision = JOptionPane.showInputDialog("You are pregnant?");
-            if(contDecision.equalsIgnoreCase("Yes")) priority++;
+            if (contDecision.equalsIgnoreCase("Yes")) priority++;
+            if (gender.equals("F")) contDecision = JOptionPane.showInputDialog("You are pregnant?");
+            if (contDecision.equalsIgnoreCase("Yes")) priority++;
 
             Patient p = new Patient(name, lastName, age, gender, id, priority);
             arrayPatients.add(p);
             fillDB();
             loadDB();
         } else {
-            JOptionPane.showMessageDialog( null, "The patient is already register");
+            JOptionPane.showMessageDialog(null, "The patient is already register");
         }
 
     }
@@ -108,45 +112,54 @@ public class Main {
         id = JOptionPane.showInputDialog("Enter your id");
         Patient validationPatient = hashTableDB.search(id);
 
-        if(validationPatient == null) {
+        if (validationPatient == null) {
             addPatient();
         } else {
             String descition = "";
             descition = JOptionPane.showInputDialog("The patient was found, do you want to send him/her to any laboratory unit (YES OR NO)");
-            if(descition.equalsIgnoreCase("Yes")) sendPatient(validationPatient);
+            if (descition.equalsIgnoreCase("Yes")) sendPatient(validationPatient);
         }
 
     }
 
     public void sendPatient(Patient patient) {
         String decision = JOptionPane.showInputDialog("Write the laboratory unit you want to send the patient (Hematologia or PropositoGeneral)");
-        if(decision.equalsIgnoreCase("Hematologia")) {
+        if (decision.equalsIgnoreCase("Hematologia")) {
             stackHematologia.push(patient);
             PQHematologia.insertElement(patient.getPriority(), patient);
         }
-        if(decision.equalsIgnoreCase("PropositoGeneral")) {
+        if (decision.equalsIgnoreCase("PropositoGeneral")) {
             stackPropositoGeneral.push(patient);
             PQPropositoGeneral.insertElement(patient.getPriority(), patient);
         }
     }
 
-    public void undo(){
-        String decision=JOptionPane.showInputDialog("You want to undo the entry?(YES or NO)");
-        if(decision.equalsIgnoreCase("Yes")){
+    public void undo() {
+        String decision = "";
+        decision = JOptionPane.showInputDialog("You want to undo the entry?(YES or NO)");
+        if (decision.equalsIgnoreCase("Yes")) {
             String respuesta = JOptionPane.showInputDialog("In wich laboratory the patient do the entry? (HEMATOLOGIA or PROPOSITOGENERAL)");
             if (respuesta.equalsIgnoreCase("Hematologia")) {
-                NodeStack p = stackHematologia.pop();
-                Patient a = (Patient) p.getPatient();
-                PQHematologia.deleteElement(a);
+                if(PQHematologia.contPatient() > 0) {
+                    NodeStack p = stackHematologia.pop();
+                    Patient a = (Patient) p.getPatient();
+                    PQHematologia.deleteElement(a);
+                } else {
+                    JOptionPane.showMessageDialog(null, "You cant undo the egress because you havent do the egress!!!!");
+                }
             } else if (respuesta.equalsIgnoreCase("PropositoGeneral")) {
-                NodeStack p = stackPropositoGeneral.pop();
-                Patient a = (Patient) p.getPatient();
-                PQPropositoGeneral.deleteElement(a);
+                if(PQPropositoGeneral.contPatient() > 0) {
+                    NodeStack p = stackPropositoGeneral.pop();
+                    Patient a = (Patient) p.getPatient();
+                    PQPropositoGeneral.deleteElement(a);
+                } else {
+                    JOptionPane.showMessageDialog(null, "You cant undo the egress because you havent do the egress!!!!");
+                }
             }
         }
-        if(deletedOnes[0]!=null) {
-            decision = JOptionPane.showInputDialog("You want to undo the egress?(YES or NO)");
-            if (decision.equalsIgnoreCase("Yes")) {
+        String decision2 = JOptionPane.showInputDialog("You want to undo the egress?(YES or NO)");
+        if (decision2.equalsIgnoreCase("Yes")) {
+            if (deletedOnes[0] != null) {
                 String respuesta = JOptionPane.showInputDialog("In which laboratory unit was the patient(HEMATOLOGIA or PROPOSITOGENERAL)");
                 if (respuesta.equalsIgnoreCase("Hematologia")) {
                     Patient p = deletedOnes[deletedOnes.length - 1];
@@ -157,14 +170,26 @@ public class Main {
                     stackPropositoGeneral.push(p);
                     PQPropositoGeneral.insertElement(p.getPriority(), p);
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "You cant undo the egress because you havent do the egress!!!!");
             }
-        }else{
-            JOptionPane.showMessageDialog(null,"You cant undo the egress because you havent do the egress!!!!");
+        }
+    }
+
+    public void attendPatient() {
+
+        String decision = JOptionPane.showInputDialog("in wich laboratory unit you want to attend the patients? (HEMATOLOGIA or PROPOSITOGENERAL)");
+        if (decision.equalsIgnoreCase("Hematologia")) {
+            Patient p = PQHematologia.extractMax();
+            System.out.println(p.toString());
+        } else if (decision.equalsIgnoreCase("PropositoGeneral")) {
+            Patient p = PQPropositoGeneral.extractMax();
+            System.out.println(p.toString());
         }
 
     }
 
-    public void fillDB(){
+    public void fillDB() {
         Gson gson = new Gson();
         String json = gson.toJson(arrayPatients);
         System.out.println(json);
@@ -177,9 +202,9 @@ public class Main {
             /*FileOutputStream fos = new FileOutputStream(new File("object.txt"));
             fos.write(json.getBytes(StandardCharsets.UTF_8));
             fos.close();*/
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -194,8 +219,8 @@ public class Main {
 
             String json = "";
             String line;
-            while ((line = reader.readLine()) != null){
-                json+=line;
+            while ((line = reader.readLine()) != null) {
+                json += line;
             }
             fis.close();
             // System.out.println(json);
@@ -203,12 +228,12 @@ public class Main {
             Gson gson = new Gson();
             Patient[] patients = gson.fromJson(json, Patient[].class);
 
-            for (Patient p : patients){
+            for (Patient p : patients) {
                 arrayPatients.add(p);
                 hashTableDB.insert(p.getId(), p);
                 // System.out.println(p);
             }
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             throw new RuntimeException(e);

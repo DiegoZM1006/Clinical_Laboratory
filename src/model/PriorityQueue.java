@@ -63,6 +63,16 @@ public class PriorityQueue<T> implements IPriorityQueue<T> {
         return arrPriority.get(1).getValue();
     }
 
+    public int contPatient() {
+        int cont = 0;
+
+        for (NodePriorityQueue<T> p : arrPriority) {
+            if(p != null) cont++;
+        }
+
+        return cont;
+    }
+
     @Override
     public String showQueue() {
         String cad = "";
@@ -74,8 +84,10 @@ public class PriorityQueue<T> implements IPriorityQueue<T> {
 
     public void deleteElement(Patient patient) {
         int cont = 0;
-        for (NodePriorityQueue p : arrPriority) {
-            if(p.getValue() == patient) break;
+        for (NodePriorityQueue<T> p : arrPriority) {
+            if(p != null) {
+                if(p.getValue() == patient) break;
+            }
             cont++;
         }
         arrPriority.remove(cont);
