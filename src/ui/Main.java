@@ -133,7 +133,16 @@ public class Main {
     public void undo(){
         String decision=JOptionPane.showInputDialog("You want to undo the entry?(YES or NO)");
         if(decision.equalsIgnoreCase("Yes")){
-            
+            String respuesta = JOptionPane.showInputDialog("In wich laboratory the patient do the entry? (HEMATOLOGIA or PROPOSITOGENERAL)");
+            if (respuesta.equalsIgnoreCase("Hematologia")) {
+                NodeStack p = stackHematologia.pop();
+                Patient a = (Patient) p.getPatient();
+                PQHematologia.deleteElement(a);
+            } else if (respuesta.equalsIgnoreCase("PropositoGeneral")) {
+                NodeStack p = stackPropositoGeneral.pop();
+                Patient a = (Patient) p.getPatient();
+                PQPropositoGeneral.deleteElement(a);
+            }
         }
         if(deletedOnes[0]!=null) {
             decision = JOptionPane.showInputDialog("You want to undo the egress?(YES or NO)");

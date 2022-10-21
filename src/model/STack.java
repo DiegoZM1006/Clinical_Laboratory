@@ -47,4 +47,8 @@ public class STack<T> implements IStack<T> {
     public boolean isEmpty(){
         return patients.size() == 0;
     }
+
+    public int size(){
+        return patients.size() - 1;
+    }
 }

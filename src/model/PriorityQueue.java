@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class PriorityQueue<T> implements IPriorityQueue<T> {
     private ArrayList<NodePriorityQueue<T>> arrPriority;
@@ -69,6 +70,15 @@ public class PriorityQueue<T> implements IPriorityQueue<T> {
             cad+= arrPriority.get(i).getPriority() + " "+ arrPriority.get(i).getValue() + "\n";
         }
         return cad;
+    }
+
+    public void deleteElement(Patient patient) {
+        int cont = 0;
+        for (NodePriorityQueue p : arrPriority) {
+            if(p.getValue() == patient) break;
+            cont++;
+        }
+        arrPriority.remove(cont);
     }
 
     @Override
