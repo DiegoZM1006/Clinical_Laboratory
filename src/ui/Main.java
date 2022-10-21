@@ -47,7 +47,7 @@ public class Main {
     public int showMenu() {
         int chooseOption;
 
-        System.out.print(
+       /*System.out.print(
                 """
                         *-----------------------------------*
                         |     MENU CLINICAL LABORATORY      |
@@ -59,9 +59,24 @@ public class Main {
                         *-----------------------------------*
                         Choose option:\s"""
         );
+        chooseOption = sc.nextInt();*/
 
-        chooseOption = sc.nextInt();
-        return chooseOption;
+        chooseOption = JOptionPane.showOptionDialog(
+                null,
+                "Seleccione opcion",
+                "Selector de opciones",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,    // null para icono por defecto.
+                new Object[] {
+                        "(1) Add Patient",
+                        "(2) Search Patient",
+                        "(3) Undo",
+                        "(4) Attend Patient",
+                        "(5) Show Patient In Queue"
+                }, null);
+
+        return chooseOption + 1;
     }
 
     public void executeOperation(int i) {
