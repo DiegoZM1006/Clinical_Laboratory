@@ -58,7 +58,7 @@ public class Patient {
         this.id = id;
     }
 
-    public int isPriority() {
+    public int getPriority() {
         return priority;
     }
 

@@ -1,27 +1,17 @@
 package model;
 
 public class NodeStack<T> {
-    private T value;
-    private Patient patient;
+    private T patient;
 
-    public NodeStack(T value, Patient patient) {
-        this.value = value;
+    public NodeStack(T patient) {
         this.patient = patient;
     }
 
-    public T getValue() {
-        return value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    public Patient getPatient() {
+    public T getPatient() {
         return patient;
     }
 
-    public void setPatient(Patient patient) {
+    public void setPatient(T patient) {
         this.patient = patient;
     }
 }

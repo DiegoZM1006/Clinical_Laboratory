@@ -1,6 +1,7 @@
 package ui;
 import com.google.gson.Gson;
 import model.*;
+import model.PriorityQueue;
 
 import javax.swing.*;
 import java.io.*;
@@ -13,6 +14,11 @@ public class Main {
 
     public static ArrayList<Patient> arrayPatients = new ArrayList<>();
     public static HashTable<String> hashTableDB = new HashTable<>(100000000);
+    public static STack<Patient> stackHematologia = new STack<>();
+    public static STack<Patient> stackPropositoGeneral = new STack<>();
+    public static PriorityQueue<Patient> PQHematologia = new PriorityQueue<>();
+    public static PriorityQueue<Patient> PQPropositoGeneral = new PriorityQueue<>();
+    public static Patient[] deletedOnes = new Patient[100000000];
 
     public Scanner sc;
     public static int option;
@@ -46,7 +52,7 @@ public class Main {
                         |     MENU CLINICAL LABORATORY      |
                         | (1) Add Patient                   |
                         | (2) Search Patient                |
-                        | (3) Send to laboratory unity      |
+                        | (3)                               |
                         *-----------------------------------*
                         Choose option:\s"""
         );
@@ -59,7 +65,6 @@ public class Main {
         switch (i) {
             case 1 -> addPatient();
             case 2 -> searchPatient();
-            case 3 -> sendPatient();
             case 5 -> option = 0;
             default -> System.out.println("Error, invalid option");
         }
@@ -69,7 +74,7 @@ public class Main {
     public void addPatient(){
         System.out.println("REGISTER PATIENT");
 
-        String name, lastName, id, gender, contDescition;
+        String name, lastName, id, gender, contDecision;
         int age, contP, priority = 0;
 
         id = JOptionPane.showInputDialog("Enter your id");
@@ -82,10 +87,10 @@ public class Main {
             gender = JOptionPane.showInputDialog("Enter your gender (M for male and F female)");
             age = Integer.parseInt(JOptionPane.showInputDialog("Enter your age"));
             if (age > 60) priority++;
-            contDescition = JOptionPane.showInputDialog("You have any disease?");
-            if(contDescition.equalsIgnoreCase("Yes")) priority++;
-            if(gender.equals("F")) contDescition = JOptionPane.showInputDialog("You are pregnant?");
-            if(contDescition.equalsIgnoreCase("Yes")) priority++;
+            contDecision = JOptionPane.showInputDialog("You have any disease?");
+            if(contDecision.equalsIgnoreCase("Yes")) priority++;
+            if(gender.equals("F")) contDecision = JOptionPane.showInputDialog("You are pregnant?");
+            if(contDecision.equalsIgnoreCase("Yes")) priority++;
 
             Patient p = new Patient(name, lastName, age, gender, id, priority);
             arrayPatients.add(p);
@@ -108,12 +113,45 @@ public class Main {
         } else {
             String descition = "";
             descition = JOptionPane.showInputDialog("The patient was found, do you want to send him/her to any laboratory unit (YES OR NO)");
-            if(descition.equalsIgnoreCase("Yes")) sendPatient();
+            if(descition.equalsIgnoreCase("Yes")) sendPatient(validationPatient);
         }
 
     }
 
-    public void sendPatient() {
+    public void sendPatient(Patient patient) {
+        String decision = JOptionPane.showInputDialog("Write the laboratory unit you want to send the patient (Hematologia or PropositoGeneral)");
+        if(decision.equalsIgnoreCase("Hematologia")) {
+            stackHematologia.push(patient);
+            PQHematologia.insertElement(patient.getPriority(), patient);
+        }
+        if(decision.equalsIgnoreCase("PropositoGeneral")) {
+            stackPropositoGeneral.push(patient);
+            PQPropositoGeneral.insertElement(patient.getPriority(), patient);
+        }
+    }
+
+    public void undo(){
+        String decision=JOptionPane.showInputDialog("You want to undo the entry?(YES or NO)");
+        if(decision.equalsIgnoreCase("Yes")){
+            
+        }
+        if(deletedOnes[0]!=null) {
+            decision = JOptionPane.showInputDialog("You want to undo the egress?(YES or NO)");
+            if (decision.equalsIgnoreCase("Yes")) {
+                String respuesta = JOptionPane.showInputDialog("In which laboratory unit was the patient(HEMATOLOGIA or PROPOSITOGENERAL)");
+                if (respuesta.equalsIgnoreCase("Hematologia")) {
+                    Patient p = deletedOnes[deletedOnes.length - 1];
+                    stackHematologia.push(p);
+                    PQHematologia.insertElement(p.getPriority(), p);
+                } else if (respuesta.equalsIgnoreCase("PropositoGeneral")) {
+                    Patient p = deletedOnes[deletedOnes.length - 1];
+                    stackPropositoGeneral.push(p);
+                    PQPropositoGeneral.insertElement(p.getPriority(), p);
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(null,"You cant undo the egress because you havent do the egress!!!!");
+        }
 
     }
 
