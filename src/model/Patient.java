@@ -7,9 +7,9 @@ public class Patient {
     private int age;
     private String gender;
     private String id;
-    private boolean priority;
+    private int priority;
 
-    public Patient(String name, String lastName, int age, String gender, String id, boolean priority) {
+    public Patient(String name, String lastName, int age, String gender, String id, int priority) {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
@@ -58,11 +58,11 @@ public class Patient {
         this.id = id;
     }
 
-    public boolean isPriority() {
+    public int isPriority() {
         return priority;
     }
 
-    public void setPriority(boolean priority) {
+    public void setPriority(int priority) {
         this.priority = priority;
     }
 

@@ -4,11 +4,15 @@ import model.*;
 
 import javax.swing.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.*;
 
 public class Main {
+
+    public static ArrayList<Patient> arrayPatients = new ArrayList<>();
+    public static HashTable<String> hashTableDB = new HashTable<>(100000000);
 
     public Scanner sc;
     public static int option;
@@ -40,9 +44,9 @@ public class Main {
                 """
                         *-----------------------------------*
                         |     MENU CLINICAL LABORATORY      |
-                        | (1) Add Patitent                  |
-                        | (2) .....                         |
-                        | (5) .....                         |
+                        | (1) Add Patient                   |
+                        | (2) Search Patient                |
+                        | (3) Send to laboratory unity      |
                         *-----------------------------------*
                         Choose option:\s"""
         );
@@ -54,32 +58,83 @@ public class Main {
     public void executeOperation(int i) {
         switch (i) {
             case 1 -> addPatient();
+            case 2 -> searchPatient();
+            case 3 -> sendPatient();
             case 5 -> option = 0;
             default -> System.out.println("Error, invalid option");
         }
     }
 
+
     public void addPatient(){
         System.out.println("REGISTER PATIENT");
 
         String name, lastName, id, gender, contDescition;
-        int age, contP, contTotalP = 0;
-        boolean priority = false;
+        int age, contP, priority = 0;
 
-        name = JOptionPane.showInputDialog("Enter your name");
-        lastName = JOptionPane.showInputDialog("Enter your last name");
         id = JOptionPane.showInputDialog("Enter your id");
-        gender = JOptionPane.showInputDialog("Enter your gender (M for male and F female)");
-        age = Integer.parseInt(JOptionPane.showInputDialog("Enter your age"));
-        if (age > 60) priority = true;
-        contDescition = JOptionPane.showInputDialog("You have any disease?");
-        if(contDescition.equalsIgnoreCase("Si")) contTotalP++;
-        contDescition = "";
-        contDescition = JOptionPane.showInputDialog("You are pregnant?");
-        if(contDescition.equalsIgnoreCase("Si")) contTotalP++;
-        if (contTotalP > 0) priority = true;
 
+        Patient validationPatient = hashTableDB.search(id);
 
+        if(validationPatient == null) {
+            name = JOptionPane.showInputDialog("Enter your name");
+            lastName = JOptionPane.showInputDialog("Enter your last name");
+            gender = JOptionPane.showInputDialog("Enter your gender (M for male and F female)");
+            age = Integer.parseInt(JOptionPane.showInputDialog("Enter your age"));
+            if (age > 60) priority++;
+            contDescition = JOptionPane.showInputDialog("You have any disease?");
+            if(contDescition.equalsIgnoreCase("Yes")) priority++;
+            if(gender.equals("F")) contDescition = JOptionPane.showInputDialog("You are pregnant?");
+            if(contDescition.equalsIgnoreCase("Yes")) priority++;
+
+            Patient p = new Patient(name, lastName, age, gender, id, priority);
+            arrayPatients.add(p);
+            fillDB();
+            loadDB();
+        } else {
+            JOptionPane.showMessageDialog( null, "The patient is already register");
+        }
+
+    }
+
+    public void searchPatient() {
+
+        String id;
+        id = JOptionPane.showInputDialog("Enter your id");
+        Patient validationPatient = hashTableDB.search(id);
+
+        if(validationPatient == null) {
+            addPatient();
+        } else {
+            String descition = "";
+            descition = JOptionPane.showInputDialog("The patient was found, do you want to send him/her to any laboratory unit (YES OR NO)");
+            if(descition.equalsIgnoreCase("Yes")) sendPatient();
+        }
+
+    }
+
+    public void sendPatient() {
+
+    }
+
+    public void fillDB(){
+        Gson gson = new Gson();
+        String json = gson.toJson(arrayPatients);
+        System.out.println(json);
+
+        try {
+            FileOutputStream fos = new FileOutputStream(new File("data.json"));
+            fos.write(json.getBytes(StandardCharsets.UTF_8));
+            fos.close();
+
+            /*FileOutputStream fos = new FileOutputStream(new File("object.txt"));
+            fos.write(json.getBytes(StandardCharsets.UTF_8));
+            fos.close();*/
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public static void loadDB() {
@@ -101,8 +156,6 @@ public class Main {
             Gson gson = new Gson();
             Patient[] patients = gson.fromJson(json, Patient[].class);
 
-            HashTable<String> hashTableDB = new HashTable<>(100000000);
-            ArrayList<Patient> arrayPatients = new ArrayList<>();
             for (Patient p : patients){
                 arrayPatients.add(p);
                 hashTableDB.insert(p.getId(), p);
