@@ -55,6 +55,7 @@ public class Main {
                         | (2) Search Patient                |
                         | (3) Undo                          |
                         | (4) Attend Patient                |
+                        | (5) Show Patient In Queue         |
                         *-----------------------------------*
                         Choose option:\s"""
         );
@@ -69,7 +70,8 @@ public class Main {
             case 2 -> searchPatient();
             case 3 -> undo();
             case 4 -> attendPatient();
-            case 5 -> option = 0;
+            case 5 -> showPatients();
+            case 6 -> option = 0;
             default -> System.out.println("Error, invalid option");
         }
     }
@@ -124,14 +126,28 @@ public class Main {
 
     public void sendPatient(Patient patient) {
         String decision = JOptionPane.showInputDialog("Write the laboratory unit you want to send the patient (Hematologia or PropositoGeneral)");
-        if (decision.equalsIgnoreCase("Hematologia")) {
+        if (decision.equalsIgnoreCase("Hematologia") && !searchPatientInHematologia(patient)) {
             stackHematologia.push(patient);
             PQHematologia.insertElement(patient.getPriority(), patient);
+        } else if(decision.equalsIgnoreCase("Hematologia")) {
+            JOptionPane.showMessageDialog(null, "The patient is already in the the Hematologia laboratory");
         }
-        if (decision.equalsIgnoreCase("PropositoGeneral")) {
+        if (decision.equalsIgnoreCase("PropositoGeneral") && !searchPatienetInPropositoGeneral(patient)) {
             stackPropositoGeneral.push(patient);
             PQPropositoGeneral.insertElement(patient.getPriority(), patient);
+        } else if(decision.equalsIgnoreCase("PropositoGeneral")) {
+            JOptionPane.showMessageDialog(null, "The patient is already in the the Proposito General laboratory");
         }
+    }
+
+    public boolean searchPatientInHematologia(Patient patient) {
+        boolean wasFound = stackHematologia.search(patient);
+        return wasFound;
+    }
+
+    public boolean searchPatienetInPropositoGeneral(Patient patient){
+        boolean wasFound = stackPropositoGeneral.search(patient);
+        return wasFound;
     }
 
     public void undo() {
@@ -178,13 +194,42 @@ public class Main {
 
     public void attendPatient() {
 
-        String decision = JOptionPane.showInputDialog("in wich laboratory unit you want to attend the patients? (HEMATOLOGIA or PROPOSITOGENERAL)");
+        String decision = JOptionPane.showInputDialog("in which laboratory unit you want to attend the patients? (HEMATOLOGIA or PROPOSITOGENERAL)");
         if (decision.equalsIgnoreCase("Hematologia")) {
             Patient p = PQHematologia.extractMax();
             System.out.println(p.toString());
         } else if (decision.equalsIgnoreCase("PropositoGeneral")) {
             Patient p = PQPropositoGeneral.extractMax();
             System.out.println(p.toString());
+        }
+
+    }
+
+    public void showPatients() {
+
+        String decision = "", patients = "";
+        decision = JOptionPane.showInputDialog("In which laboratory unit you want to show the Queue (HEMATOLOGIA or PROPOSITOGENERAL)");
+
+        if(decision.equalsIgnoreCase("Hematologia")) {
+
+            patients = PQHematologia.showPatients();
+
+            if (patients.equalsIgnoreCase("")) {
+                JOptionPane.showMessageDialog(null, "There is not patient in Hematologia");
+            } else {
+                System.out.println(patients);
+            }
+
+        } else if (decision.equalsIgnoreCase("PropositoGeneral")) {
+
+            patients = PQPropositoGeneral.showPatients();
+
+            if (patients.equalsIgnoreCase("")) {
+                JOptionPane.showMessageDialog(null, "There is not patient in Proposito General");
+            } else {
+                System.out.println(patients);
+            }
+
         }
 
     }

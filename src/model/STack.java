@@ -51,4 +51,16 @@ public class STack<T> implements IStack<T> {
     public int size(){
         return patients.size() - 1;
     }
+    public boolean search(T element){
+        boolean flag = false;
+
+        for (NodeStack<T> p : patients){
+            if(p.getPatient()==element){
+                flag=true;
+                break;
+            }
+        }
+
+        return flag;
+    }
 }

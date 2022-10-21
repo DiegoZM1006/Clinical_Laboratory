@@ -111,4 +111,17 @@ public class PriorityQueue<T> implements IPriorityQueue<T> {
             val = val/2;
         }
     }
+
+    public String showPatients() {
+
+        String dataP = "";
+
+        for (NodePriorityQueue<T> p : arrPriority) {
+            if(p != null) dataP += p.getValue().toString() + "\n";
+        }
+
+        return dataP;
+
+    }
+
 }
