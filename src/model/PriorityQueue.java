@@ -73,15 +73,6 @@ public class PriorityQueue<T> implements IPriorityQueue<T> {
         return cont;
     }
 
-    @Override
-    public String showQueue() {
-        String cad = "";
-        for (int i = 1; i < arrPriority.size() ; i++) {
-            cad+= arrPriority.get(i).getPriority() + " "+ arrPriority.get(i).getValue() + "\n";
-        }
-        return cad;
-    }
-
     public void deleteElement(Patient patient) {
         int cont = 0;
         for (NodePriorityQueue<T> p : arrPriority) {
@@ -97,21 +88,17 @@ public class PriorityQueue<T> implements IPriorityQueue<T> {
     public void increaseKey(T element, int newValue) {
         int val = -1;
         for (int i = 1; i < arrPriority.size(); i++) {
-            if(arrPriority.get(i).getValue().equals(element)) val = i;
+            if(arrPriority.get(i).getValue().equals(element)){
+                val = i;
+            }
         }
-        if(newValue < arrPriority.get(val).getPriority()) {
-            //
-            //Error, the key is lower than the current key
-        }
-        while (val>1 && arrPriority.get(val/2).getPriority() < arrPriority.get(val).getPriority()){
-            NodePriorityQueue<T> temp1 = arrPriority.get(val/2);
-            NodePriorityQueue<T> temp2 = arrPriority.get(val);
-            arrPriority.set(val, temp1);
-            arrPriority.set(val/2, temp2);
-            val = val/2;
+        if(newValue > arrPriority.get(val).getPriority()) {
+            arrPriority.get(val).setPriority(arrPriority.get(val).getPriority()+newValue);
+            buildMaxHeapify();
         }
     }
 
+    @Override
     public String showPatients() {
 
         String dataP = "";

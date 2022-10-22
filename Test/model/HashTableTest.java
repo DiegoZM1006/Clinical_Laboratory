@@ -19,40 +19,104 @@ class HashTableTest {
         hashTable.insert("1912567490", new Patient("Ester", "Navas", 76, "M", "1912567490",2));
     }
 
+    // TEST TO INSERT ELEMENT
+
     @Test
-    public void insertElement() {
+    public void insertElement1() {
         setUp1();
 
-        Patient patient1 = new Patient("Gines", "Gonzales", 25, "F", "1234432234",0);
+        Patient patient1 = new Patient("Clemente", "Mora", 18, "F", "1564783923",1);
 
         hashTable.insert(patient1.getId(), patient1);
 
-        assertEquals(patient1, hashTable.search("1234432234"));
-        assertEquals(null, hashTable.search("9823567834"));
+        assertEquals(patient1, hashTable.search("1564783923"));
+        assertEquals(null, hashTable.search("1234567894"));
     }
 
     @Test
-    public void searchElement() {
+    public void insertElement2() {
         setUp1();
 
-        Patient patientGines = new Patient("Gines", "Gonzales", 25, "F", "1234432234",0);
-        Patient patientSaiao = new Patient("Saioa", "Matos", 32, "M", "1987654321",1);
-        Patient patientEster = new Patient("Ester", "Navas", 76, "M", "1912567490",2);
+        Patient patient1 = new Patient("Guillem", "Varela", 54, "M", "4321543345",2);
 
-        hashTable.insert(patientGines.getId(), patientGines);
-        hashTable.insert(patientSaiao.getId(), patientSaiao);
-        hashTable.insert(patientEster.getId(), patientEster);
+        hashTable.insert(patient1.getId(), patient1);
 
-        assertEquals(patientGines, hashTable.search("1234432234"));
-        assertEquals(patientSaiao, hashTable.search("1987654321"));
-        assertEquals(patientEster, hashTable.search("1912567490"));
+        assertEquals(patient1, hashTable.search("4321543345"));
+        assertEquals(null, hashTable.search("1564783923"));
     }
 
     @Test
-    public void deleteElement() {
+    public void insertElement3() {
+        setUp1();
+
+        Patient patient1 = new Patient("Dylan", "Gilabert", 41, "M", "5912387645",0);
+
+        hashTable.insert(patient1.getId(), patient1);
+
+        assertEquals(patient1, hashTable.search("5912387645"));
+        assertEquals(null, hashTable.search("4321543345"));
+    }
+
+    // TEST TO SEARCH ELEMENT
+
+    @Test
+    public void searchElement1() {
+        setUp2();
+        assertEquals("Patient{name='Gines'lastName='Gonzales', age='25', gender='F', id='1234432234', priority=0}", hashTable.search("1234432234").toString());
+    }
+
+    @Test
+    public void searchElement2() {
+        setUp2();
+        assertEquals("Patient{name='Saioa'lastName='Matos', age='32', gender='M', id='1987654321', priority=1}", hashTable.search("1987654321").toString());
+    }
+
+    @Test
+    public void searchElement3() {
+        setUp2();
+        assertEquals("Patient{name='Ester'lastName='Navas', age='76', gender='M', id='1912567490', priority=2}", hashTable.search("1912567490").toString());
+    }
+
+    // TEST TO DELETE ELEMENT
+
+    @Test
+    public void deleteElement1() {
+        setUp2();
+        hashTable.delete("1234432234");
+        assertEquals(null, hashTable.search("1234432234"));
+    }
+
+    @Test
+    public void deleteElement2() {
         setUp2();
         hashTable.delete("1987654321");
         assertEquals(null, hashTable.search("1987654321"));
     }
 
+    @Test
+    public void deleteElement3() {
+        setUp2();
+        hashTable.delete("1912567490");
+        assertEquals(null, hashTable.search("1912567490"));
+    }
+
+    // TEST TO HASHKEY
+
+    @Test
+    public void hashKey1() {
+        setUp2();
+        assertEquals(1, hashTable.hashKey("1234432234"));
+    }
+
+    @Test
+    public void hashKey2() {
+        setUp2();
+        assertEquals(0, hashTable.hashKey("1987654321"));
+    }
+
+    @Test
+    public void hashKey3() {
+        setUp2();
+        assertEquals(4, hashTable.hashKey("1912567490"));
+    }
 }
