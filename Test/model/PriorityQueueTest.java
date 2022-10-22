@@ -73,7 +73,7 @@ class PriorityQueueTest {
     @Test
     public void showMax1(){
         setUp2();
-        assertEquals("Patient{name='Ester'lastName='Navas', age='76', gender='M', id='1912567490', priority=1}", patients.showMax().toString());
+        assertEquals("Patient{name='Ester'lastName='Navas', age='76', gender='M', id='1912567490'", patients.showMax().toString());
     }
 
     @Test
@@ -83,7 +83,7 @@ class PriorityQueueTest {
         Patient patient1 = new Patient("Aritz", "Villena", 32, "F", "4321564765",2);
         patients.insertElement(patient1.getPriority(), patient1);
 
-        assertEquals("Patient{name='Aritz'lastName='Villena', age='32', gender='F', id='4321564765', priority=2}", patients.showMax().toString());
+        assertEquals("Patient{name='Aritz'lastName='Villena', age='32', gender='F', id='4321564765'", patients.showMax().toString());
     }
 
     @Test
@@ -93,7 +93,7 @@ class PriorityQueueTest {
         Patient patient1 = new Patient("Gregorio", "Prieto", 42, "M", "5432234432",3);
         patients.insertElement(patient1.getPriority(), patient1);
 
-        assertEquals("Patient{name='Gregorio'lastName='Prieto', age='42', gender='M', id='5432234432', priority=3}", patients.showMax().toString());
+        assertEquals("Patient{name='Gregorio'lastName='Prieto', age='42', gender='M', id='5432234432'", patients.showMax().toString());
     }
 
     // TEST TO EXTRACT MAX
@@ -101,13 +101,13 @@ class PriorityQueueTest {
     @Test
     public void extractMax1(){
         setUp3();
-        assertEquals("Patient{name='Aicha'lastName='Zamora', age='15', gender='F', id='1879657435', priority=3}", patients.extractMax().toString());
+        assertEquals("Patient{name='Aicha'lastName='Zamora', age='15', gender='F', id='1879657435'", patients.extractMax().toString());
     }
 
     @Test
     public void extractMax2(){
         setUp2();
-        assertEquals("Patient{name='Gregorio'lastName='Prieto', age='42', gender='M', id='5432234432', priority=3}", patients.extractMax().toString());
+        assertEquals("Patient{name='Ester'lastName='Navas', age='76', gender='M', id='1912567490'", patients.extractMax().toString());
     }
 
     @Test
@@ -117,7 +117,7 @@ class PriorityQueueTest {
         Patient patient1 = new Patient("Felix", "Barba", 75, "M", "1323987456",2);
         patients.insertElement(patient1.getPriority(), patient1);
 
-        assertEquals("Patient{name='Felix'lastName='Barba', age='75', gender='M', id='1323987456', priority=2}", patients.extractMax().toString());
+        assertEquals("Patient{name='Felix'lastName='Barba', age='75', gender='M', id='1323987456'", patients.extractMax().toString());
     }
 
     // TESTO TO CONT PATIENTS
@@ -151,9 +151,9 @@ class PriorityQueueTest {
     @Test
     public void showPatients1() {
         setUp2();
-        assertEquals("Patient{name='Ester'lastName='Navas', age='76', gender='M', id='1912567490', priority=2}\n" +
-                "Patient{name='Gines'lastName='Gonzales', age='25', gender='F', id='1234432234', priority=0}\n" +
-                "Patient{name='Saioa'lastName='Matos', age='32', gender='M', id='1987654321', priority=1}\n", patients.showPatients());
+        assertEquals("Patient{name='Ester'lastName='Navas', age='76', gender='M', id='1912567490', priority=1}\n" +
+                "Patient{name='Saioa'lastName='Matos', age='32', gender='M', id='1987654321', priority=0}\n" +
+                "Patient{name='Gines'lastName='Gonzales', age='25', gender='F', id='1234432234', priority=0}\n", patients.showPatients());
     }
 
     @Test
@@ -175,6 +175,42 @@ class PriorityQueueTest {
     }
 
     // TESTO TO INCREASE KEY
+
+    @Test
+    public void increaseKey1() {
+        setUp1();
+
+        Patient patient1 = new Patient("Carolina", "Bolaños", 34, "F", "6543786195",1);
+        patients.insertElement(patient1.getPriority(), patient1);
+        patients.increaseKey(patient1, 4);
+
+        assertEquals("Patient{name='Carolina'lastName='Bolaños', age='34', gender='F', id='6543786195', priority=4}\n", patients.showPatients());
+
+    }
+
+    @Test
+    public void increaseKey2() {
+        setUp1();
+
+        Patient patient1 = new Patient("Carme", "Arroyo", 35, "F", "5367824529",1);
+        patients.insertElement(patient1.getPriority(), patient1);
+        patients.increaseKey(patient1, 5);
+
+        assertEquals("Patient{name='Carme'lastName='Arroyo', age='35', gender='F', id='5367824529', priority=5}\n", patients.showPatients());
+
+    }
+
+    @Test
+    public void increaseKey3() {
+        setUp1();
+
+        Patient patient1 = new Patient("Jess", "Bermudez", 44, "M", "7345829456",1);
+        patients.insertElement(patient1.getPriority(), patient1);
+        patients.increaseKey(patient1, 6);
+
+        assertEquals("Patient{name='Jess'lastName='Bermudez', age='44', gender='M', id='7345829456', priority=6}\n", patients.showPatients());
+
+    }
 
     // TEST TO DELETE ELEMENT
 

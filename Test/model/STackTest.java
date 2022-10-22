@@ -63,8 +63,10 @@ class STackTest {
     public void pushTest2(){
         setUp1();
         Patient patient4 = new Patient("Daniel", "Montezuma", 18,"M", "A00382231", 2);
-        patients.push(patient4);
-        assertEquals(patients.peek().getPatient(),patient4);
+        Patient patient5 = new Patient("Samuel", "Meneses", 18,"M", "A00382231", 3);
+
+        patients.push(patient5);
+        assertEquals(patients.peek().getPatient(),patient5);
     }
 
     @Test
