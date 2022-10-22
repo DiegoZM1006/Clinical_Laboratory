@@ -93,7 +93,7 @@ public class PriorityQueue<T> implements IPriorityQueue<T> {
             }
         }
         if(newValue > arrPriority.get(val).getPriority()) {
-            arrPriority.get(val).setPriority(arrPriority.get(val).getPriority()+newValue);
+            arrPriority.get(val).setPriority(newValue);
             buildMaxHeapify();
         }
     }
@@ -104,7 +104,7 @@ public class PriorityQueue<T> implements IPriorityQueue<T> {
         String dataP = "";
 
         for (NodePriorityQueue<T> p : arrPriority) {
-            if(p != null) dataP += p.getValue().toString() + "\n";
+            if(p != null) dataP += p.getValue().toString() + ", priority=" + p.getPriority() + "}" +"\n";
         }
 
         return dataP;

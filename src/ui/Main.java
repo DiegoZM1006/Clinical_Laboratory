@@ -73,7 +73,8 @@ public class Main {
                         "(2) Search Patient",
                         "(3) Undo",
                         "(4) Attend Patient",
-                        "(5) Show Patient In Queue"
+                        "(5) Increase priority to a patient",
+                        "(6) Show Patient In Queue"
                 }, null);
 
         return chooseOption + 1;
@@ -85,8 +86,9 @@ public class Main {
             case 2 -> searchPatient();
             case 3 -> undo();
             case 4 -> attendPatient();
-            case 5 -> showPatients();
-            case 6 -> option = 0;
+            case 5 -> increaseKeyPatient();
+            case 6 -> showPatients();
+            case 7 -> option = 0;
             default -> System.out.println("Error, invalid option");
         }
     }
@@ -247,6 +249,31 @@ public class Main {
 
         }
 
+    }
+
+    public void increaseKeyPatient() {
+        String id = JOptionPane.showInputDialog("Enter the id of the patient you want to increase the key");
+        Patient validation = hashTableDB.search(id);
+        if(validation == null){
+            JOptionPane.showMessageDialog(null,"The patatient with the id: " + id + "does not exist");
+        }else{
+            String answer = JOptionPane.showInputDialog("Enter the laboratory where the patient is");
+            if(answer.equalsIgnoreCase("Hematologia")){
+                if(PQHematologia.showPatients().contains(id.toString())) {
+                    int newPriority = Integer.parseInt(JOptionPane.showInputDialog("Enter the new priority (Remember it has to be greater than the actual)"));
+                    PQHematologia.increaseKey(validation, newPriority);
+                } else {
+                    JOptionPane.showMessageDialog(null,"The patatient with the id: " + id + "does not exist in Hematologia");
+                }
+            }else if(answer.equalsIgnoreCase("PropositoGeneral")){
+                if(PQPropositoGeneral.showPatients().contains(id.toString())){
+                    int newPriority = Integer.parseInt(JOptionPane.showInputDialog("Enter the new priority(Remember it has to be greater than the actual)"));
+                    PQPropositoGeneral.increaseKey(validation, newPriority);
+                }else{
+                    JOptionPane.showMessageDialog(null,"The patatient with the id: " + id + "does not exist in Proposito General");
+                }
+            }
+        }
     }
 
     public void fillDB() {

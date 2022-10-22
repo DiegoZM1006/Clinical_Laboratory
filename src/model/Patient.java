@@ -73,8 +73,6 @@ public class Patient {
                 "lastName='" + lastName + '\'' +
                 ", age='" + age + '\'' +
                 ", gender='" + gender + '\'' +
-                ", id='" + id + '\'' +
-                ", priority=" + priority +
-                '}';
+                ", id='" + id + '\'';
     }
 }
